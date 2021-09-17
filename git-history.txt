@@ -1,0 +1,80 @@
+  224  yum install git
+  225  sudo yum install git
+  228  mkdir git
+  229  chmod 777 git
+  230  cd git
+  235  git init
+  238  git --version
+  256  git add .
+  257  git commit -m "initial commit"
+  258  git remote add origin https://github.com/vacky224/BCS.git
+  259  git push origin master
+  262  git push origin master
+  264  git add 1.txt
+  265  git push origin master
+  267  git branch
+  268  git status
+  269  git checkout master
+  270  git pull'
+  271  git pull
+  272    git branch --set-upstream-to=origin master
+  273    git branch --set-upstream-to=master
+  279  git clone https://github.com/vacky224/BCS.git
+  285  git add test.txt
+  286  git pudh
+  287  git push
+  288  git status
+  289  git commit
+  290  git commit -m
+  292  git commit -m test.txt
+  293  git push
+  301  cd git
+  304  git commit -m .txt
+  305  git commit -m 1.txt
+  314  git clone https://github.com/vacky224/BCS.git
+  316  git add 1.txt
+  317  git push
+  318  git status
+  319  git commit -m 1.txt
+  320  git branch --set-upstream-to=origin master
+  321  git branch --set-upstream-to=master
+  327  git add 1.txt
+  328  git commit -m 1.txt
+  329  git push
+  338  git clone https://github.com/vacky224/BCS.git
+  343  git commit -m yt.txt 
+  344  git push
+  347  git commit -m yt.txt
+  348  git add yt.txt 
+  349  git commit -m yt.txt
+  350  git push
+  365  git add spark.txt 
+  366  git commit spark.txt 
+  367  git commit -m spark.txt 
+  368  git push
+  370  git add spark.txt 
+  371  git commit -m spark.txt 
+  372  git add yt.txt 
+  375  git add yt.txt 
+  376  git commit -m yt.txt 
+  377  git push
+  382  git add am.txt 
+  383  git commit -m am.txt 
+  384  git push
+  390  history | grep -i git
+  396  git add spark.txt 
+  397  git commit -m spark.txt 
+  398  git push
+  401  git pull
+  402  git push
+  410  git add rum.txt 
+  411  git commit -m rum.txt 
+  412  git push
+  425  git clone https://github.com/vacky224/BCS.git
+  431  git add tom.txt 
+  432  git commit -m tom.txt 
+  433  git pull
+  434* git push
+  436  git commit -m tom.txt 
+  437  git push
+  440  history | grep -i 'git' | tee git-history.txt
