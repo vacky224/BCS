@@ -1,0 +1,107 @@
+!connect jdbc:hive2://m2-maprts-vm97-172.mip.storage.hpecorp.net:2304/;ssl=true;sslkeystore=/opt/mapr/conf/ssl_truststore
+
+!connect jdbc:hive2://m2-maprts-vm97-172.mip.storage.hpecorp.net:2304/;auth=maprsasl;ssl=true;sslkeystore=/opt/mapr/conf/ssl_truststore
+
+
+
+https://spark.apache.org/docs/2.4.0/sql-performance-tuning.html
+
+ ls
+  155  ls -lart
+  156  spark-shell
+  157  ./spark-shell --master yarn
+  158  ls -lart
+  159  ./spark-shell --master yarn
+  160  yarn application -list
+  161  ls -lart
+  162  ./pyspark --master yarn
+  163  yarn application -list
+  164  yarn application -kill application_1629754131586_0005
+  165  rpm -qa | grep mapr-spark*
+  166  netstat -plunt | grep 2304
+
+To access Spark History Server: https://10.163.172.97:18480/history/application_1629754131586_0009/jobs/
+
+Github for Spark
+https://gist.github.com/seanorama/094451c21008b72daa1ee8cbd706f2ba
+
+import org.apache.spark.sql.types
+import org.apache.spark.storage.StorageLevel
+import scala.io.Source
+import scala.collection.mutable.HashMap
+import java.io.File
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.types._
+import scala.collection.mutable.ListBuffer
+import org.apache.spark.util.IntParam
+
+Spark Cases:
+
+https://hpeezmeral.my.salesforce.com/5004W00001eF0Se?srPos=10&srKp=500
+
+Spark Application History Issue:
+https://hpeezmeral.my.salesforce.com/5004W00001eGwQO?srPos=8&srKp=500
+
+Spark Memory Issue
+https://hpeezmeral.my.salesforce.com/5004W00001eFVL8?srPos=27&srKp=500
+
+Hello Subrata,
+
+The suggestion is to increase the spark heap memory for the Spark Daemons and observe the issue again.
+
+from /opt/mapr/spark/<spark-version>/conf/spark-env.sh file change the memory parameter "SPARK_DAEMON_MEMORY" from 1g to 2g .
+
+Instead SPARK_DAEMON_MEMORY=1g change to SPARK_DAEMON_MEMORY=2g at export SPARK_DAEMON_MEMORY=1g
+
+then
+restart the spark hisstoryserver from mapr
+
+Stop the hisstoryserver using below command.
+/opt/mapr/spark/<spark-version>/sbin/stop-history-server.sh
+
+then start the hisstoryserver using below command.
+/opt/mapr/spark/<spark-verson>/sbin/start-history-server.sh
+
+
+By changing the SPARK_DAEMON_MEMORY parameter to 2g will e effective only for the Daemons( Matster, Worker, HistoryServer) and it will not give any impact
+for memory allocation on executors.
+
+Since we don't have any specific parameter to set SparkHistoryServer memory to 2g, we are setting at Deamon level(Here Deamon includes the HistoryServer process.)
+
+Executor memory will controlled by "spark.executor.memory" property in spark-default.conf .
+
+Please confirm the same after changes are done.
+
+Regards,
+Ezmeral team.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Spark Tuning.
+
+https://hpeezmeral.my.salesforce.com/5004W00001eFqYi?srPos=7&srKp=500
+Kindly refer the analysis below:
+
+1) Limiting the size of file: You could use spark.sql.files.maxPartitionBytes option which is the maximum number of bytes to pack into a single partition when reading files. Kindly refer below two helpful articles.
+
+https://spark.apache.org/docs/2.4.0/sql-performance-tuning.html
+https://stackoverflow.com/questions/49826264/save-the-parquet-output-file-with-fixed-size-in-spark
+
+2) For limiting the number of files from spark on mapr fs you can do this using coalesce/repartition. Coalesce is always a better approach than repartition since it does no shuffle of data across partition, therefore for reducing number of files always a better approach.
+
+Kindly refer below articles for the same.
+https://spark.apache.org/docs/2.4.4/rdd-programming-guide.html
+
+However this option has to be done at job/code level not at the global level, since every application will have its own specific requirement.
+
+Kindy let me know if you have any further questions over the same.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+Spark Tuning links:
+
+https://blog.cloudera.com/how-to-tune-your-apache-spark-jobs-part-2/
+
+https://spoddutur.github.io/spark-notes/distribution_of_executors_cores_and_memory_for_spark_application.html
+
+https://spoddutur.github.io/spark-notes/task_memory_management_in_spark
+
+
